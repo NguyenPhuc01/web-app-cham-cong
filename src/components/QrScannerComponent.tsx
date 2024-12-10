@@ -13,8 +13,8 @@ const QrScannerComponent: React.FC = () => {
   const startScanning = () => {
     if (videoRef.current && !isScanning) {
       // Khởi tạo qr-scanner và kết nối với videoRef
-      const scanner = new QrScanner(videoRef.current, (result) => {
-        setScanResult(result.data); // Lấy dữ liệu khi quét mã QR thành công
+      const scanner = new QrScanner(videoRef.current, (result: any) => {
+        setScanResult(result?.data); // Lấy dữ liệu khi quét mã QR thành công
       });
 
       // Bắt đầu quét khi nhấn nút
