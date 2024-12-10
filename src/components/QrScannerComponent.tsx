@@ -50,15 +50,20 @@ const QrScannerComponent: React.FC = () => {
     height: "200px",
     border: "2px solid rgba(255, 255, 255, 0.8)", // Viền trắng với độ trong suốt
     transform: "translate(-50%, -50%)",
-    pointerEvents: "none" as "none",
+    pointerEvents: "none" as "none", // Để không chặn các sự kiện camera
   };
   return (
-    <div style={containerStyle}>
+    <div>
       <h1>QR Code Scanner</h1>
+
+      {/* Button mở camera */}
+      <button onClick={startScanning} disabled={isScanning}>
+        {isScanning ? "Đang quét..." : "Mở Camera để quét"}
+      </button>
+
+      {/* Video element cho camera */}
       <video ref={videoRef} style={{ width: "100%" }} />
-
-      <div style={overlayStyle}></div>
-
+      {videoRef.current && <div style={overlayStyle}></div>}
       <div>
         {scanResult ? (
           <p>Mã QR đã quét: {scanResult}</p>
