@@ -19,6 +19,11 @@ const QrScannerComponent: React.FC = () => {
           setScanResult(result?.data); // Lấy dữ liệu khi quét mã QR thành công
           setIsScanning(false);
           videoRef.current = null;
+          scanner.stop();
+          if (videoRef.current?.srcObject) {
+            const stream = videoRef.current.srcObject as MediaStream;
+            stream.getTracks().forEach((track) => track.stop()); // Dừng các track của camera
+          }
         },
         {
           highlightScanRegion: true,
