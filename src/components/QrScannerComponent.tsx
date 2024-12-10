@@ -10,17 +10,23 @@ const QrScannerComponent: React.FC = () => {
   // Định nghĩa kiểu cho videoRef, sẽ là một đối tượng HTMLVideoElement hoặc null
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
-  const startScanning = () => {
+  const startScanning = async () => {
     if (videoRef.current && !isScanning) {
       // Khởi tạo qr-scanner và kết nối với videoRef
-      const scanner = new QrScanner(videoRef.current, (result: any) => {
-        setScanResult(result?.data); // Lấy dữ liệu khi quét mã QR thành công
-        setIsScanning(false);
-        videoRef.current = null;
-      });
+      const scanner = new QrScanner(
+        videoRef.current,
+        (result: any) => {
+          setScanResult(result?.data); // Lấy dữ liệu khi quét mã QR thành công
+          setIsScanning(false);
+          videoRef.current = null;
+        },
+        {
+          highlightScanRegion: true,
+        }
+      );
 
       // Bắt đầu quét khi nhấn nút
-      scanner.start();
+      await scanner.start();
       setIsScanning(true);
 
       // Dọn dẹp khi component unmount hoặc dừng quét
@@ -38,24 +44,9 @@ const QrScannerComponent: React.FC = () => {
       setIsScanning(false);
     };
   }, []);
-  const containerStyle = {
-    position: "relative" as "relative",
-    width: "100%",
-    height: "100%",
-  };
 
-  const overlayStyle = {
-    position: "absolute" as "absolute",
-    top: "50%",
-    left: "50%",
-    width: "200px",
-    height: "200px",
-    border: "2px solid rgba(255, 255, 255, 0.8)", // Viền trắng với độ trong suốt
-    transform: "translate(-50%, -50%)",
-    pointerEvents: "none" as "none", // Để không chặn các sự kiện camera
-  };
   return (
-    <div style={containerStyle}>
+    <div>
       <h1>QR Code Scanner</h1>
 
       {/* Button mở camera */}
@@ -66,7 +57,6 @@ const QrScannerComponent: React.FC = () => {
       {/* Video element cho camera */}
       <video ref={videoRef} style={{ width: "100%" }} />
 
-      {videoRef.current && isScanning && <div style={overlayStyle}></div>}
       <div>
         {scanResult ? (
           <p>Mã QR đã quét: {scanResult}</p>
