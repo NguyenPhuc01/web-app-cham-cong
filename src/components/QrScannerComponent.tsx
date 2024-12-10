@@ -53,7 +53,7 @@ const QrScannerComponent: React.FC = () => {
     pointerEvents: "none" as "none", // Để không chặn các sự kiện camera
   };
   return (
-    <div>
+    <div style={containerStyle}>
       <h1>QR Code Scanner</h1>
 
       {/* Button mở camera */}
