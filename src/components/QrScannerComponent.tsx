@@ -1,40 +1,29 @@
 import React, { useEffect, useRef, useState } from "react";
 import QrScanner from "qr-scanner";
 
-// Khởi tạo component quét mã QR
 const QrScannerComponent: React.FC = () => {
-  // Trạng thái để lưu kết quả quét và trạng thái camera
   const [scanResult, setScanResult] = useState<string | null>(null);
-  const [isScanning, setIsScanning] = useState<boolean>(false); // Trạng thái để kiểm soát camera
+  const [isScanning, setIsScanning] = useState<boolean>(false);
 
-  // Định nghĩa kiểu cho videoRef, sẽ là một đối tượng HTMLVideoElement hoặc null
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
   const startScanning = async () => {
     if (videoRef.current && !isScanning) {
-      // Khởi tạo qr-scanner và kết nối với videoRef
       const scanner = new QrScanner(
         videoRef.current,
         (result: any) => {
-          setScanResult(result?.data); // Lấy dữ liệu khi quét mã QR thành công
+          setScanResult(result?.data);
           setIsScanning(false);
           videoRef.current = null;
           scanner.stop();
-          if (videoRef.current?.srcObject) {
-            const stream = videoRef.current.srcObject as MediaStream;
-            stream.getTracks().forEach((track) => track.stop()); // Dừng các track của camera
-          }
         },
         {
           highlightScanRegion: true,
         }
       );
 
-      // Bắt đầu quét khi nhấn nút
       await scanner.start();
       setIsScanning(true);
-
-      // Dọn dẹp khi component unmount hoặc dừng quét
       return () => {
         scanner.stop();
         setIsScanning(false);
@@ -42,10 +31,8 @@ const QrScannerComponent: React.FC = () => {
     }
   };
 
-  // Hàm dọn dẹp camera khi component unmount hoặc dừng quét
   useEffect(() => {
     return () => {
-      // Dừng quét khi component unmount hoặc tắt camera
       setIsScanning(false);
     };
   }, []);
