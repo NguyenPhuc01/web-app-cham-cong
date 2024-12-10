@@ -36,18 +36,28 @@ const QrScannerComponent: React.FC = () => {
       setIsScanning(false);
     };
   }, []);
+  const containerStyle = {
+    position: "relative" as "relative",
+    width: "100%",
+    height: "100%",
+  };
 
+  const overlayStyle = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    width: "200px",
+    height: "200px",
+    border: "2px solid rgba(255, 255, 255, 0.8)", // Viền trắng với độ trong suốt
+    transform: "translate(-50%, -50%)",
+    pointerEvents: "none" as "none",
+  };
   return (
-    <div>
+    <div style={containerStyle}>
       <h1>QR Code Scanner</h1>
-
-      {/* Button mở camera */}
-      <button onClick={startScanning} disabled={isScanning}>
-        {isScanning ? "Đang quét..." : "Mở Camera để quét"}
-      </button>
-
-      {/* Video element cho camera */}
       <video ref={videoRef} style={{ width: "100%" }} />
+
+      <div style={overlayStyle}></div>
 
       <div>
         {scanResult ? (
